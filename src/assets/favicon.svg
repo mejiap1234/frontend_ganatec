@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">GANATEC</title>
+  <desc id="desc">Ícono de GANATEC: cabeza de una res sobre campos verdes, símbolo de ganadería y tecnología.</desc>
+  <defs>
+    <linearGradient id="fondo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d5a38"/>
+      <stop offset="1" stop-color="#073b2e"/>
+    </linearGradient>
+    <linearGradient id="pelaje" x1="0" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#e4a263"/>
+      <stop offset="1" stop-color="#af6734"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fondo de aplicación. Deja márgenes seguros para favicon y PWA. -->
+  <rect x="4" y="4" width="120" height="120" rx="30" fill="url(#fondo)"/>
+  <circle cx="64" cy="61" r="46" fill="#f3f8e9"/>
+
+  <!-- Paisaje ganadero en segundo plano. -->
+  <path d="M20 79Q40 63 62 79Q85 64 108 78V96H20Z" fill="#9fcb5e"/>
+  <path d="M20 91Q44 77 67 89Q90 76 108 88V103H20Z" fill="#5b9d48"/>
+
+  <!-- Orejas y pequeños cuernos de la res. -->
+  <path d="M47 41Q38 29 40 22Q49 23 55 36Z" fill="#d7b489" stroke="#704725" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M81 41Q90 29 88 22Q79 23 73 36Z" fill="#d7b489" stroke="#704725" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M46 47Q31 35 18 45Q19 61 46 64Z" fill="#a76236" stroke="#6c3c25" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M82 47Q97 35 110 45Q109 61 82 64Z" fill="#a76236" stroke="#6c3c25" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M41 49Q29 43 25 48Q31 55 42 56Z" fill="#e8a981"/>
+  <path d="M87 49Q99 43 103 48Q97 55 86 56Z" fill="#e8a981"/>
+
+  <!-- Rostro, franja clara y hocico: formas simples, legibles a 32 px. -->
+  <path d="M44 42Q48 29 64 28Q80 29 84 42Q89 55 83 74L82 91Q77 106 64 108Q51 106 46 91L45 74Q39 55 44 42Z"
+        fill="url(#pelaje)" stroke="#704525" stroke-width="2.6" stroke-linejoin="round"/>
+  <path d="M60 31Q66 27 71 33Q70 46 76 59Q75 69 68 78L58 78Q54 67 57 58Q62 43 60 31Z" fill="#f8e8ca"/>
+  <path d="M47 68Q52 62 59 67" fill="none" stroke="#80502d" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M69 67Q76 62 81 68" fill="none" stroke="#80502d" stroke-width="2.2" stroke-linecap="round"/>
+  <ellipse cx="53" cy="69" rx="3.2" ry="3.8" fill="#222b25"/>
+  <ellipse cx="75" cy="69" rx="3.2" ry="3.8" fill="#222b25"/>
+  <circle cx="54" cy="68" r="1" fill="#fff"/>
+  <circle cx="76" cy="68" r="1" fill="#fff"/>
+  <path d="M48 80Q52 76 64 76Q76 76 80 80Q86 91 76 98Q64 104 52 98Q42 91 48 80Z"
+        fill="#f0d5ae" stroke="#8b5a40" stroke-width="2"/>
+  <ellipse cx="55" cy="86" rx="3.6" ry="2.5" fill="#6e5145"/>
+  <ellipse cx="73" cy="86" rx="3.6" ry="2.5" fill="#6e5145"/>
+  <path d="M58 95Q64 98 70 95" fill="none" stroke="#9b7360" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Hoja verde: vínculo entre campo y gestión inteligente. -->
+  <path d="M22 99Q24 84 40 82Q38 100 22 102Z" fill="#c8e87b" stroke="#0d5a38" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M23 101L36 88" fill="none" stroke="#2a7e3e" stroke-width="1.6" stroke-linecap="round"/>
+</svg>
