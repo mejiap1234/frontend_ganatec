@@ -345,7 +345,7 @@ const Leche = () => {
               </p>
             ) : (
               <div className="tabla-contenedor">
-                <table className="tabla-ganatec">
+                <table className="tabla-ganatec tabla-apilable" aria-label="Producción de leche diaria">
                   <thead>
                     <tr>
                       <th>Fecha</th>
@@ -365,7 +365,7 @@ const Leche = () => {
                   <tbody>
                     {produccionesDiarias.map((produccion) => (
                       <tr key={produccion.id}>
-                        <td>
+                        <td data-label="Fecha">
                           {String(produccion.fecha_produccion)
                             .slice(0, 10)
                             .split("-")
@@ -373,20 +373,20 @@ const Leche = () => {
                             .join("/")}
                         </td>
 
-                        <td>{produccion.vacas_ordenadas}</td>
+                        <td data-label="Vacas ordeñadas">{produccion.vacas_ordenadas}</td>
 
-                        <td>
+                        <td data-label="Producción">
                           <strong>
                             {Number(produccion.litros_totales || 0).toFixed(2)}{" "}
                             L
                           </strong>
                         </td>
 
-                        <td>{produccion.numero_ordenios}</td>
+                        <td data-label="Ordeños">{produccion.numero_ordenios}</td>
 
-                        <td>{produccion.observacion || "Sin observación"}</td>
+                        <td data-label="Observación">{produccion.observacion || "Sin observación"}</td>
 
-                        <td>
+                        <td data-label="Acciones">
                           <button
                             type="button"
                             className="boton-secundario"
@@ -455,7 +455,7 @@ const Leche = () => {
               <p className="texto-secundario">No se encontraron animales.</p>
             ) : (
               <div className="tabla-contenedor">
-                <table className="tabla-ganatec">
+                <table className="tabla-ganatec tabla-apilable" aria-label="Producción por animal">
                   <thead>
                     <tr>
                       <th>Animal</th>
@@ -475,7 +475,7 @@ const Leche = () => {
                   <tbody>
                     {registrosFiltrados.map((registro) => (
                       <tr key={registro.animal.id}>
-                        <td>
+                        <td data-label="Animal">
                           <strong>
                             {registro.animal.nombre || "Sin nombre"}
                           </strong>
@@ -485,7 +485,7 @@ const Leche = () => {
                           </div>
                         </td>
 
-                        <td>
+                        <td data-label="Lactancia">
                           {registro.lactanciaActiva ? (
                             <>
                               <span className="estado-lactancia activa">
@@ -510,28 +510,28 @@ const Leche = () => {
                           )}
                         </td>
 
-                        <td>
+                        <td data-label="Hoy">
                           {Number(
                             registro.produccion?.resumen?.total_dia || 0,
                           ).toFixed(2)}{" "}
                           L
                         </td>
 
-                        <td>
+                        <td data-label="Mes">
                           {Number(
                             registro.produccion?.resumen?.total_mes || 0,
                           ).toFixed(2)}{" "}
                           L
                         </td>
 
-                        <td>
+                        <td data-label="Promedio diario">
                           {Number(
                             registro.produccion?.resumen?.promedio_diario || 0,
                           ).toFixed(2)}{" "}
                           L
                         </td>
 
-                        <td>
+                        <td data-label="Acciones">
                           <div className="acciones-tabla">
                             <button
                               type="button"

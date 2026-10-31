@@ -439,7 +439,7 @@ const Lotes = () => {
 
               <div className="tabla-contenedor">
 
-                <table className="tabla-ganatec">
+                <table className="tabla-ganatec tabla-apilable" aria-label="Lotes de la finca">
 
                   <thead>
 
@@ -479,7 +479,7 @@ const Lotes = () => {
                           key={lote.id}
                         >
 
-                          <td>
+                          <td data-label="Lote">
 
                             <strong>
 
@@ -492,7 +492,7 @@ const Lotes = () => {
                           </td>
 
 
-                          <td>
+                          <td data-label="Descripción">
 
                             {
                               lote.descripcion
@@ -503,7 +503,7 @@ const Lotes = () => {
                           </td>
 
 
-                          <td>
+                          <td data-label="Animales">
 
                             <div className="lote-total-animales">
 
@@ -528,7 +528,7 @@ const Lotes = () => {
                           </td>
 
 
-                          <td>
+                          <td data-label="Estado">
 
                             <span
                               className={
@@ -549,7 +549,7 @@ const Lotes = () => {
                           </td>
 
 
-                          <td>
+                          <td data-label="Acciones">
 
                             <button
                               type="button"

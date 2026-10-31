@@ -673,7 +673,7 @@ const Finanzas = () => {
 
               <div className="tabla-contenedor">
 
-                <table className="tabla-dashboard">
+                <table className="tabla-dashboard tabla-apilable" aria-label="Movimientos financieros recientes">
 
                   <thead>
 
@@ -716,7 +716,7 @@ const Finanzas = () => {
                             }
                           >
 
-                            <td>
+                            <td data-label="Fecha">
 
                               {
                                 formatearFecha(
@@ -727,7 +727,7 @@ const Finanzas = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Tipo">
 
                               {
                                 movimiento.tipo ===
@@ -739,7 +739,7 @@ const Finanzas = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Categoría">
 
                               {
                                 nombreCategoria(
@@ -750,7 +750,7 @@ const Finanzas = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Descripción">
 
                               {
                                 movimiento.descripcion
@@ -761,7 +761,7 @@ const Finanzas = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Valor">
 
                               <strong>
 
