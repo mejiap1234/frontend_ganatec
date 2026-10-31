@@ -350,9 +350,8 @@ const ReproduccionServicioNuevo = ({ modoModal = false, onClose, onSuccess }) =>
   };
 
 
-  return (
-
-    <>{!modoModal && <DashboardLayout>}
+  const contenido = (
+    <>
 
       {!modoModal && (
       <div className="pagina-header">
@@ -729,9 +728,10 @@ const ReproduccionServicioNuevo = ({ modoModal = false, onClose, onSuccess }) =>
 
       )}
 
-    {!modoModal && </DashboardLayout>}</>
-
+    </>
   );
+
+  return modoModal ? contenido : <DashboardLayout>{contenido}</DashboardLayout>;
 
 };
 
