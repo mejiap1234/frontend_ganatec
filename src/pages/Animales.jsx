@@ -1,3 +1,4 @@
+import ModalGanatec from "../components/ModalGanatec";
 import {
   useEffect,
   useState
@@ -355,39 +356,15 @@ const manejarRegistrarAnimal = async (e) => {
 
 )} 
 
-      {mostrarFormulario && (
-
+      <ModalGanatec
+        abierto={mostrarFormulario}
+        titulo="Registrar animal"
+        onClose={() => setMostrarFormulario(false)}
+      >
   <form
-  className="formulario-animal"
+  className="formulario-animal registro-modal-form"
   onSubmit={manejarRegistrarAnimal}
 >
-
-    <div className="formulario-animal-header">
-
-      <div>
-
-        <p className="dashboard-label">
-          Nuevo registro
-        </p>
-
-        <h2>
-          Registrar animal
-        </h2>
-
-      </div>
-
-      <button
-        type="button"
-        className="boton-cerrar"
-        onClick={() =>
-          setMostrarFormulario(false)
-        }
-      >
-        ×
-      </button>
-
-    </div>
-
 
     <div className="form-grid">
 
@@ -524,9 +501,7 @@ const manejarRegistrarAnimal = async (e) => {
     </div>
 
   </form>
-
-)}
-
+      </ModalGanatec>
 
       {/* CARGANDO */}
 

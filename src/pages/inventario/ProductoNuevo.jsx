@@ -9,7 +9,7 @@ import {
   registrarMovimientoInventario,
 } from "../../services/inventario.service";
 
-const ProductoNuevo = () => {
+const ProductoNuevo = ({ modoModal = false, onClose, onSuccess }) => {
   const navigate = useNavigate();
 
   /* =========================================================
@@ -123,7 +123,8 @@ const ProductoNuevo = () => {
         });
       }
 
-      navigate("/inventario");
+      if (modoModal) onSuccess?.();
+      else navigate("/inventario");
     } catch (error) {
       console.error("Error creando producto:", error);
 
@@ -145,12 +146,13 @@ const ProductoNuevo = () => {
           ENCABEZADO
       ===================================================== */}
 
+      {!modoModal && (
       <div className="modulo-subheader">
         <div>
           <button
             type="button"
             className="boton-secundario"
-            onClick={() => navigate("/inventario")}
+            onClick={() => modoModal ? onClose?.() : navigate("/inventario")}
           >
             <ArrowLeft size={16} />
             Volver
@@ -164,13 +166,9 @@ const ProductoNuevo = () => {
           </p>
         </div>
       </div>
-
-      {/* =====================================================
-          FORMULARIO
-      ===================================================== */}
-
-      <div className="dashboard-panel">
-        <form className="formulario-reproduccion" onSubmit={manejarGuardar}>
+      )}
+      <div className={modoModal ? "registro-modal-contenido" : "dashboard-panel"}>
+        <form className={modoModal ? "formulario-reproduccion registro-modal-form" : "formulario-reproduccion"} onSubmit={manejarGuardar}>
           <div className="form-grid">
             {/* -------------------------------------------------
                 NOMBRE
@@ -318,7 +316,7 @@ const ProductoNuevo = () => {
             <button
               type="button"
               className="boton-secundario"
-              onClick={() => navigate("/inventario")}
+              onClick={() => modoModal ? onClose?.() : navigate("/inventario")}
             >
               Cancelar
             </button>

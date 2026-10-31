@@ -1,3 +1,5 @@
+import ModalGanatec from "../components/ModalGanatec";
+import ReproduccionServicioNuevo from "./ReproduccionServicioNuevo";
 import {
   useEffect,
   useMemo,
@@ -33,6 +35,7 @@ import {
 const Reproduccion = () => {
 
   const navigate = useNavigate();
+  const [modalServicioAbierto, setModalServicioAbierto] = useState(false);
 
   /* =========================================================
      ESTADOS
@@ -413,11 +416,7 @@ const Reproduccion = () => {
         <button
           type="button"
           className="boton-principal"
-          onClick={() =>
-            navigate(
-              "/reproduccion/servicio/nuevo"
-            )
-          }
+          onClick={() => setModalServicioAbierto(true)}
         >
 
           <Plus size={17} />
@@ -428,6 +427,23 @@ const Reproduccion = () => {
 
       </div>
 
+
+      <ModalGanatec
+        abierto={modalServicioAbierto}
+        titulo="Registrar servicio reproductivo"
+        onClose={() => setModalServicioAbierto(false)}
+      >
+        {modalServicioAbierto && (
+          <ReproduccionServicioNuevo
+            modoModal
+            onClose={() => setModalServicioAbierto(false)}
+            onSuccess={() => {
+              setModalServicioAbierto(false);
+              cargarReproduccionGeneral();
+            }}
+          />
+        )}
+      </ModalGanatec>
 
       {cargando ? (
 

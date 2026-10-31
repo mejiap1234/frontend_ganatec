@@ -1,3 +1,5 @@
+import ModalGanatec from "../../components/ModalGanatec";
+import ProductoNuevo from "./ProductoNuevo";
 import {
   useEffect,
   useMemo,
@@ -22,6 +24,7 @@ import {
 
 const Inventario = () => {
 
+  const [modalNuevoProducto, setModalNuevoProducto] = useState(false);
   const navigate =
     useNavigate();
 
@@ -290,6 +293,15 @@ const Inventario = () => {
 
     <>
 
+      <ModalGanatec abierto={modalNuevoProducto} titulo="Nuevo producto" onClose={() => setModalNuevoProducto(false)}>
+        {modalNuevoProducto && (
+          <ProductoNuevo modoModal onClose={() => setModalNuevoProducto(false)} onSuccess={() => {
+            setModalNuevoProducto(false);
+            cargarInventario();
+          }} />
+        )}
+      </ModalGanatec>
+
       {/* =====================================================
           ENCABEZADO
       ===================================================== */}
@@ -315,9 +327,7 @@ const Inventario = () => {
           type="button"
           className="boton-principal"
           onClick={() =>
-            navigate(
-              "/inventario/nuevo"
-            )
+            setModalNuevoProducto(true)
           }
         >
 

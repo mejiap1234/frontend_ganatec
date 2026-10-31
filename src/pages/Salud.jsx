@@ -1,3 +1,4 @@
+import ModalGanatec from "../components/ModalGanatec";
 import { useEffect, useMemo, useState } from "react";
 
 import {
@@ -563,51 +564,11 @@ const Salud = () => {
           REGISTRAR EVENTO
       ===================================================== */}
 
-      {mostrarFormularioSalud && (
-
-        <form
-          className="formulario-salud"
+      <ModalGanatec abierto={mostrarFormularioSalud} titulo="Registrar evento de salud" onClose={() => setMostrarFormularioSalud(false)}>
+<form
+          className="formulario-salud registro-modal-form"
           onSubmit={manejarRegistrarSalud}
         >
-
-          <div className="formulario-reproduccion-header">
-
-            <div>
-
-              <p className="dashboard-label">
-                Nuevo registro
-              </p>
-
-              <h4>
-                Registrar evento de salud
-              </h4>
-
-              <span>
-                Selecciona el animal al que
-                pertenece la novedad sanitaria.
-              </span>
-
-            </div>
-
-
-            <button
-              type="button"
-              className="boton-cerrar"
-              onClick={() => {
-
-                setMostrarFormularioSalud(
-                  false
-                );
-
-                setErrorRegistroSalud("");
-
-              }}
-            >
-              ×
-            </button>
-
-          </div>
-
 
           <div className="form-grid">
 
@@ -836,14 +797,9 @@ const Salud = () => {
           </div>
 
         </form>
+      </ModalGanatec>
 
-      )}
-
-
-      {/* =====================================================
-          CERRAR EVENTO
-      ===================================================== */}
-
+      {/* Cerrar evento: se conserva el formulario existente. */}
       {eventoCerrar && (
 
         <form
