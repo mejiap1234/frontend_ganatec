@@ -544,7 +544,7 @@ const Inventario = () => {
 
               <div className="tabla-contenedor">
 
-                <table className="tabla-ganatec">
+                <table className="tabla-ganatec tabla-apilable" aria-label="Productos del inventario">
 
                   <thead>
 
@@ -596,7 +596,7 @@ const Inventario = () => {
                             key={producto.id}
                           >
 
-                            <td>
+                            <td data-label="Producto">
 
                               <strong>
 
@@ -622,7 +622,7 @@ const Inventario = () => {
                             </td>
 
 
-                            <td className="texto-capitalizado">
+                            <td data-label="Categoría" className="texto-capitalizado">
 
                               {
                                 producto.categoria
@@ -631,7 +631,7 @@ const Inventario = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Stock actual">
 
                               <strong>
 
@@ -654,7 +654,7 @@ const Inventario = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Stock mínimo">
 
                               {
                                 Number(
@@ -673,7 +673,7 @@ const Inventario = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Estado">
 
                               <span
                                 className={
@@ -690,7 +690,7 @@ const Inventario = () => {
                             </td>
 
 
-                            <td>
+                            <td data-label="Acción">
 
                               <button
                                 type="button"
