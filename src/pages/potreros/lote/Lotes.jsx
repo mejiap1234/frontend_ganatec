@@ -1,3 +1,5 @@
+import ModalGanatec from "../../../components/ModalGanatec";
+import LoteNuevo from "./LoteNuevo";
 import {
   useEffect,
   useMemo,
@@ -22,6 +24,7 @@ import {
 
 const Lotes = () => {
 
+  const [modalNuevoLote, setModalNuevoLote] = useState(false);
   const navigate =
     useNavigate();
 
@@ -207,6 +210,15 @@ const Lotes = () => {
 
     <>
 
+      <ModalGanatec abierto={modalNuevoLote} titulo="Nuevo lote" onClose={() => setModalNuevoLote(false)}>
+        {modalNuevoLote && (
+          <LoteNuevo modoModal onClose={() => setModalNuevoLote(false)} onSuccess={() => {
+            setModalNuevoLote(false);
+            cargarLotes();
+          }} />
+        )}
+      </ModalGanatec>
+
       {/* =====================================================
           ENCABEZADO
       ===================================================== */}
@@ -231,9 +243,7 @@ const Lotes = () => {
           type="button"
           className="boton-principal"
           onClick={() =>
-            navigate(
-              "/potreros/lotes/nuevo"
-            )
+            setModalNuevoLote(true)
           }
         >
 
