@@ -15,7 +15,7 @@ import {
 } from "../../../services/potreros/potreros.service";
 
 
-const LoteNuevo = () => {
+const LoteNuevo = ({ modoModal = false, onClose, onSuccess }) => {
 
   const navigate =
     useNavigate();
@@ -98,9 +98,8 @@ const LoteNuevo = () => {
       });
 
 
-      navigate(
-        "/potreros/lotes"
-      );
+      if (modoModal) onSuccess?.();
+      else navigate("/potreros/lotes");
 
 
     } catch (error) {
@@ -135,6 +134,7 @@ const LoteNuevo = () => {
 
     <>
 
+      {!modoModal && (
       <div className="modulo-subheader">
 
         <div>
@@ -142,11 +142,7 @@ const LoteNuevo = () => {
           <button
             type="button"
             className="boton-secundario"
-            onClick={() =>
-              navigate(
-                "/potreros/lotes"
-              )
-            }
+            onClick={() => modoModal ? onClose?.() : navigate("/potreros/lotes")}
           >
 
             <ArrowLeft size={16} />
@@ -168,12 +164,11 @@ const LoteNuevo = () => {
         </div>
 
       </div>
-
-
-      <div className="dashboard-panel">
+      )}
+      <div className={modoModal ? "registro-modal-contenido" : "dashboard-panel"}>
 
         <form
-          className="formulario-reproduccion"
+          className={modoModal ? "formulario-reproduccion registro-modal-form" : "formulario-reproduccion"}
           onSubmit={manejarGuardar}
         >
 
@@ -236,11 +231,7 @@ const LoteNuevo = () => {
             <button
               type="button"
               className="boton-secundario"
-              onClick={() =>
-                navigate(
-                  "/potreros/lotes"
-                )
-              }
+              onClick={() => modoModal ? onClose?.() : navigate("/potreros/lotes")}
             >
 
               Cancelar
