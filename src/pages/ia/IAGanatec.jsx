@@ -37,14 +37,32 @@ const IAGanatec = () => {
    DESPLAZAMIENTO AUTOMÁTICO DEL CHAT
 ========================================================= */
 
-  const finalChatRef = useRef(null);
+  const mensajesRef = useRef(null);
+  const entradaRef = useRef(null);
 
+  // Desplazar solamente el historial; nunca toda la página.
   useEffect(() => {
-    finalChatRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
+    const panel = mensajesRef.current;
+    if (!panel) return;
+
+    const movimientoReducido = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    panel.scrollTo({
+      top: panel.scrollHeight,
+      behavior: movimientoReducido ? "instant" : "smooth",
     });
-  }, [mensajes, cargando]);
+  }, [mensajes, cargando, error]);
+
+  // El campo crece al escribir sin ocultar el historial del chat.
+  useEffect(() => {
+    const entrada = entradaRef.current;
+    if (!entrada) return;
+
+    entrada.style.height = "auto";
+    entrada.style.height = `${Math.min(entrada.scrollHeight, 128)}px`;
+  }, [pregunta]);
 
   /* =========================================================
      ENVIAR PREGUNTA
@@ -151,7 +169,7 @@ const IAGanatec = () => {
 
         <div className="ia-ganatec-contenedor">
           <section className="ia-ganatec-chat">
-            <div className="ia-ganatec-mensajes">
+            <div className="ia-ganatec-mensajes" ref={mensajesRef} role="log" aria-label="Conversación con IA GANATEC" aria-live="polite">
               {mensajes.map((mensaje) => (
                 <div
                   key={mensaje.id}
@@ -217,9 +235,6 @@ const IAGanatec = () => {
                 </div>
               )}
 
-              <div ref={finalChatRef} />
-            </div>
-
             {mensajes.length === 1 && (
               <div className="ia-sugerencias">
                 <div className="ia-sugerencias-titulo">
@@ -242,10 +257,16 @@ const IAGanatec = () => {
               </div>
             )}
 
-            {error && <div className="ia-ganatec-error">{error}</div>}
+            {error && <div className="ia-ganatec-error" role="alert">{error}</div>}
 
-            <div className="ia-ganatec-input">
+              <div className="ia-mensajes-fin" aria-hidden="true" />
+            </div>
+
+            <div className="ia-ganatec-compositor">
+              <div className="ia-ganatec-input">
               <textarea
+                ref={entradaRef}
+                aria-label="Escribe tu pregunta a IA GANATEC"
                 value={pregunta}
                 onChange={(event) => setPregunta(event.target.value)}
                 onKeyDown={manejarTeclado}
@@ -260,6 +281,7 @@ const IAGanatec = () => {
                 onClick={() => enviarPregunta()}
                 disabled={cargando || !pregunta.trim()}
                 title="Enviar pregunta"
+                aria-label="Enviar pregunta"
               >
                 {cargando ? (
                   <LoaderCircle size={20} className="ia-spinner" />
@@ -273,6 +295,7 @@ const IAGanatec = () => {
               IA GANATEC utiliza los registros disponibles de la finca y puede
               ofrecer orientación general. Las recomendaciones no sustituyen la
               valoración de un profesional cuando sea necesaria.
+            </div>
             </div>
           </section>
         </div>
