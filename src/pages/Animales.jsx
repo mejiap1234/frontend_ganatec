@@ -612,7 +612,7 @@ const manejarRegistrarAnimal = async (e) => {
 
             <div className="tabla-contenedor">
 
-              <table className="tabla-ganatec">
+              <table className="tabla-ganatec tabla-apilable" aria-label="Animales registrados">
 
                 <thead>
 
@@ -658,14 +658,14 @@ const manejarRegistrarAnimal = async (e) => {
   }
 >
 
-                        <td>
+                        <td data-label="Identificación">
                           {
                             animal.identificacion
                           }
                         </td>
 
 
-                        <td>
+                        <td data-label="Nombre">
                           {
                             animal.nombre
                             ||
@@ -674,7 +674,7 @@ const manejarRegistrarAnimal = async (e) => {
                         </td>
 
 
-                        <td>
+                        <td data-label="Sexo">
                           {
                             animal.sexo
                             ||
@@ -683,7 +683,7 @@ const manejarRegistrarAnimal = async (e) => {
                         </td>
 
 
-                        <td>
+                        <td data-label="Raza">
                           {
                             animal.raza
                             ||
@@ -692,7 +692,7 @@ const manejarRegistrarAnimal = async (e) => {
                         </td>
 
 
-                        <td>
+                        <td data-label="Estado">
 
                           <span
                             className={
