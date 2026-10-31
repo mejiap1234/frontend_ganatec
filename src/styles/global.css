@@ -1019,6 +1019,140 @@ input {
 .tabla-ganatec .acciones-tabla { flex-wrap: nowrap; }
 .tabla-ganatec .boton-tabla { white-space: nowrap; }
 
+/* 06.1.1 Presentación uniforme y tarjetas adaptables.
+   Las tablas de Salud y Reproducción conservan sus reglas propias. */
+.tabla-contenedor:has(.tabla-apilable) {
+  min-width: 0;
+  isolation: isolate;
+}
+
+.tabla-apilable {
+  width: 100%;
+  min-width: 0;
+}
+
+.tabla-apilable th,
+.tabla-apilable td {
+  padding: 13px clamp(10px, 1.15vw, 16px);
+}
+
+.tabla-apilable th {
+  font-size: 11px;
+  letter-spacing: .025em;
+  color: #556b5d;
+}
+
+.tabla-apilable td {
+  overflow-wrap: anywhere;
+  color: #334339;
+}
+
+.tabla-apilable tbody tr:focus-within {
+  background: #f0f8f2;
+}
+
+.tabla-apilable .descripcion-tabla {
+  max-width: 48ch;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+.tabla-apilable .acciones-tabla {
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tabla-apilable .boton-tabla,
+.tabla-apilable .boton-secundario {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .tabla-contenedor:has(.tabla-apilable) {
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .tabla-apilable,
+  .tabla-apilable tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-apilable thead {
+    display: none;
+  }
+
+  .tabla-apilable tbody tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 18px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #e1eae3;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(20, 55, 34, .035);
+  }
+
+  .tabla-apilable tbody tr:nth-child(even) {
+    background: #fff;
+  }
+
+  .tabla-apilable td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    width: 100%;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .tabla-apilable td::before {
+    content: attr(data-label);
+    display: block;
+    color: #66786c;
+    font-size: 10px;
+    font-weight: 750;
+    letter-spacing: .065em;
+    text-transform: uppercase;
+  }
+
+  .tabla-apilable td:last-child {
+    grid-column: 1 / -1;
+    padding-top: 8px;
+    border-top: 1px solid #edf1ee;
+  }
+
+  .tabla-apilable .descripcion-tabla {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tabla-apilable tbody tr {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .tabla-apilable td:last-child {
+    grid-column: auto;
+  }
+}
+
 /*
   No imponemos anchos mínimos a todas las tablas.
   Salud y Reproducción tienen una presentación responsive propia;
@@ -1117,6 +1251,28 @@ input {
 .lista-header span {
   color: #8a928d;
   font-size: 12px;
+}
+
+/* Encabezados de listados: controles alineados sin forzar scroll horizontal. */
+.lista-header {
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+
+.lista-header > * {
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .lista-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .lista-header .buscador {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 /* ---------------------------------------------------------
@@ -3699,6 +3855,23 @@ button.dashboard-card span {
   white-space: nowrap;
 }
 
+
+/* 17.8.7.1 Legibilidad de importes y movimientos. */
+.tabla-dashboard.tabla-apilable td:last-child strong {
+  font-variant-numeric: tabular-nums;
+  color: #153d27;
+  font-weight: 750;
+}
+
+.tabla-dashboard.tabla-apilable td {
+  line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+  .tabla-dashboard.tabla-apilable td:last-child {
+    align-items: flex-start;
+  }
+}
 
 /* =========================================================
    17.8.8 ESTADOS VACÍOS
