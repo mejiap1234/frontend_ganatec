@@ -1,3 +1,5 @@
+import ModalGanatec from "../../components/ModalGanatec";
+import PotreroNuevo from "./potrero/PotreroNuevo";
 import {
   useEffect,
   useMemo,
@@ -21,6 +23,7 @@ import {
 
 const Potreros = () => {
 
+  const [modalNuevoPotrero, setModalNuevoPotrero] = useState(false);
   const navigate =
     useNavigate();
 
@@ -191,6 +194,15 @@ const Potreros = () => {
 
     <>
 
+      <ModalGanatec abierto={modalNuevoPotrero} titulo="Nuevo potrero" onClose={() => setModalNuevoPotrero(false)}>
+        {modalNuevoPotrero && (
+          <PotreroNuevo modoModal onClose={() => setModalNuevoPotrero(false)} onSuccess={() => {
+            setModalNuevoPotrero(false);
+            cargarPotreros();
+          }} />
+        )}
+      </ModalGanatec>
+
       {/* =====================================================
           ENCABEZADO INTERNO
       ===================================================== */}
@@ -215,9 +227,7 @@ const Potreros = () => {
           type="button"
           className="boton-principal"
           onClick={() =>
-            navigate(
-              "/potreros/nuevo"
-            )
+            setModalNuevoPotrero(true)
           }
         >
 
