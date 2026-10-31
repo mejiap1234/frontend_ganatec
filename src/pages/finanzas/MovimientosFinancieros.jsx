@@ -759,7 +759,7 @@ const MovimientosFinancieros = () => {
 
                 <div className="tabla-contenedor">
 
-                  <table className="tabla-dashboard">
+                  <table className="tabla-dashboard tabla-apilable" aria-label="Historial de movimientos financieros">
 
                     <thead>
 
@@ -806,7 +806,7 @@ const MovimientosFinancieros = () => {
                               }
                             >
 
-                              <td>
+                              <td data-label="Fecha">
 
                                 {
                                   formatearFecha(
@@ -817,7 +817,7 @@ const MovimientosFinancieros = () => {
                               </td>
 
 
-                              <td>
+                              <td data-label="Tipo">
 
                                 {
                                   movimiento.tipo ===
@@ -829,7 +829,7 @@ const MovimientosFinancieros = () => {
                               </td>
 
 
-                              <td>
+                              <td data-label="Categoría">
 
                                 {
                                   nombreCategoria(
@@ -840,7 +840,7 @@ const MovimientosFinancieros = () => {
                               </td>
 
 
-                              <td>
+                              <td data-label="Descripción">
 
                                 {
                                   movimiento.descripcion
@@ -851,7 +851,7 @@ const MovimientosFinancieros = () => {
                               </td>
 
 
-                              <td>
+                              <td data-label="Registrado por">
 
                                 {
                                   movimiento.registrado_por_nombre
@@ -862,7 +862,7 @@ const MovimientosFinancieros = () => {
                               </td>
 
 
-                              <td>
+                              <td data-label="Valor">
 
                                 <strong>
 
