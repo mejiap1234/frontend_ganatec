@@ -24,7 +24,7 @@ import {
 } from "../services/reproduccion.service";
 
 
-const ReproduccionServicioNuevo = () => {
+const ReproduccionServicioNuevo = ({ modoModal = false, onClose, onSuccess }) => {
 
   const { animalId } =
     useParams();
@@ -321,9 +321,11 @@ const ReproduccionServicioNuevo = () => {
       );
 
 
-      navigate(
-        `/reproduccion/animal/${animalSeleccionado}`
-      );
+      if (modoModal) {
+        onSuccess?.();
+      } else {
+        navigate(`/reproduccion/animal/${animalSeleccionado}`);
+      }
 
 
     } catch (error) {
@@ -350,8 +352,9 @@ const ReproduccionServicioNuevo = () => {
 
   return (
 
-    <DashboardLayout>
+    <>{!modoModal && <DashboardLayout>}
 
+      {!modoModal && (
       <div className="pagina-header">
 
         <div>
@@ -393,6 +396,8 @@ const ReproduccionServicioNuevo = () => {
       </div>
 
 
+      )}
+
       {cargando ? (
 
         <div className="dashboard-loading">
@@ -404,7 +409,7 @@ const ReproduccionServicioNuevo = () => {
         <div className="dashboard-panel">
 
           <form
-            className="formulario-reproduccion"
+            className={modoModal ? "formulario-reproduccion registro-modal-form" : "formulario-reproduccion"}
             onSubmit={manejarGuardar}
           >
 
@@ -693,12 +698,9 @@ const ReproduccionServicioNuevo = () => {
               <button
                 type="button"
                 className="boton-secundario"
-                onClick={() =>
-                  navigate(
-                    animalId
-                      ? `/reproduccion/animal/${animalId}`
-                      : "/reproduccion"
-                  )
+                onClick={() => modoModal
+                  ? onClose?.()
+                  : navigate(animalId ? `/reproduccion/animal/${animalId}` : "/reproduccion")
                 }
               >
                 Cancelar
@@ -727,7 +729,7 @@ const ReproduccionServicioNuevo = () => {
 
       )}
 
-    </DashboardLayout>
+    {!modoModal && </DashboardLayout>}</>
 
   );
 
