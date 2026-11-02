@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Trabajadores from "./pages/Trabajadores";
+import Reportes from "./pages/Reportes";
 
 import Register from "./pages/Register";
 
@@ -284,6 +285,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
 
           {/* =========================================================
               18. MÓDULO DE ALERTAS
