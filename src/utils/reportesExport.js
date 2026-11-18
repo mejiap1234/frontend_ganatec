@@ -1,3 +1,5 @@
+import { crearPdfReporte } from "./reportesPdf";
+
 // Exportación completa con paginación para no sobrecargar Neon.
 const LIMITE = 100;
 const csvCelda = value => {
@@ -40,6 +42,14 @@ export async function descargarCSVCompleto(tipo,filtros,consultar,inicial) {
     ...filas.map(f=>columnas.map(c=>csvCelda(f[c.key])).join(";"))].join("\r\n");
   descargar(new Blob(["\uFEFF",csv],{type:"text/csv;charset=utf-8"}),
     `ganatec-${tipo}-${filtros.desde}-${filtros.hasta}.csv`);
+}
+
+// Descarga directa de un PDF real: no depende de ventanas emergentes ni de imprimir.
+export async function descargarPDFCompleto(tipo,filtros,consultar,inicial) {
+  const filas = await todasLasFilas(tipo, filtros, consultar, inicial);
+  const bytes = crearPdfReporte(tipo, filtros, inicial, filas);
+  descargar(new Blob([bytes], { type:"application/pdf" }),
+    `ganatec-${tipo}-${filtros.desde}-${filtros.hasta}.pdf`);
 }
 
 export async function imprimirReporteCompleto(tipo,filtros,consultar,inicial,ventana) {
