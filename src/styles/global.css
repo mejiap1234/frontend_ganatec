@@ -6553,3 +6553,14 @@ textarea {
   .reportes-tabla tbody tr { grid-template-columns: 1fr; }
   .reportes-filtros { padding: 12px; }
 }
+
+/* Ganatec - mejoras de reportes */
+.reportes-exportaciones {display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.reportes-exportaciones button {display:inline-flex;align-items:center;gap:7px}
+.reportes-tendencia {margin-bottom:18px}
+.reportes-tendencia-svg {width:100%;height:auto;overflow:visible}
+.reportes-tendencia-leyenda {display:flex;flex-wrap:wrap;gap:18px;font-size:12px;margin:8px 0}
+.reportes-tendencia-leyenda span {display:inline-flex;align-items:center;gap:6px}
+.reportes-tendencia-leyenda i {width:11px;height:11px;display:inline-block;border-radius:50%}
+.reportes-tendencia-ayuda {font-size:12px;color:#607368}
+@media (max-width:760px){.reportes-lista-header{flex-wrap:wrap}.reportes-exportaciones{width:100%}}
