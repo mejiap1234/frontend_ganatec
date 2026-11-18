@@ -4,7 +4,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import { useAuth } from "../context/AuthContext";
 import { obtenerReporte, obtenerFincasReportes } from "../services/reportes.service";
 import ReportesTendencia from "../components/ReportesTendencia";
-import { descargarCSVCompleto, imprimirReporteCompleto } from "../utils/reportesExport";
+import { descargarCSVCompleto, descargarPDFCompleto } from "../utils/reportesExport";
 
 const TIPOS = [
   { id:"operativo", nombre:"Estado actual", descripcion:"Hato, inventario y potreros actuales" },
@@ -53,6 +53,7 @@ export default function Reportes(){
   const [fincaId,setFincaId]=useState(usuario?.finca_id ? String(usuario.finca_id) : "");
   const [fincasListas,setFincasListas]=useState(!esSuperadmin);
   const [exportando,setExportando]=useState(false);
+  const [mensajeExportacion,setMensajeExportacion]=useState("");
   const [tipo,setTipo]=useState("operativo");
   const [vista,setVista]=useState("animales");
   const [desde,setDesde]=useState(fechaBogota().slice(0,4)+"-01-01");
@@ -102,23 +103,19 @@ export default function Reportes(){
   const columnas=datos?.columnas||[];
   const grafica=datos?.grafica||[];
   const máximo=Math.max(1,...grafica.map(x=>Number(x.valor)||0));
-  const generarArchivo=async (formato, ventana=null)=>{
+  const generarArchivo=async (formato)=>{
     if(!datos || exportando)return;
     setExportando(true);
     setError("");
+    setMensajeExportacion(formato==="pdf" ? "Preparando el PDF completo…" : "Preparando el CSV completo…");
     try {
       if(formato==="csv") await descargarCSVCompleto(tipo,filtros,obtenerReporte,datos);
-      else await imprimirReporteCompleto(tipo,filtros,obtenerReporte,datos,ventana);
+      else await descargarPDFCompleto(tipo,filtros,obtenerReporte,datos);
+      setMensajeExportacion(formato==="pdf" ? "PDF generado. Revisa tus descargas." : "CSV generado. Revisa tus descargas.");
     } catch(err) {
-      if(ventana && !ventana.closed)ventana.close();
+      setMensajeExportacion("");
       setError(err.response?.data?.message || err.message || "No se pudo generar el archivo.");
     } finally {setExportando(false);}
-  };
-  const abrirPDF=()=>{
-    const ventana=window.open("", "_blank");
-    if(!ventana){setError("Permite ventanas emergentes para guardar el informe como PDF.");return;}
-    ventana.document.write("<p>Preparando informe Ganatec...</p>");
-    void generarArchivo("pdf",ventana);
   };
   const exportarPagina=()=>{
     // Exporta únicamente la página visible, sin fingir que es el histórico completo.
@@ -190,6 +187,7 @@ export default function Reportes(){
         </button>
       </section>
       {error&&<div className="dashboard-error" role="alert">{error}</div>}
+      {mensajeExportacion&&<p role="status" aria-live="polite" className="reportes-exportacion-estado">{mensajeExportacion}</p>}
       {cargando ? (
         <div className="dashboard-loading" role="status">Calculando {titulo.toLowerCase()}…</div>
       ) : datos&&(
@@ -239,9 +237,9 @@ export default function Reportes(){
                   disabled={exportando || !datos.paginacion.totalItems}>
                   <Download size={16}/> {exportando?"Generando...":"CSV completo"}
                 </button>
-                <button type="button" className="boton-secundario" onClick={abrirPDF}
-                  disabled={exportando} title="Abre la impresión para guardar como PDF">
-                  <FileText size={16}/> Guardar PDF
+                <button type="button" className="boton-secundario" onClick={()=>void generarArchivo("pdf")}
+                  disabled={exportando} title="Descarga el reporte completo en PDF">
+                  <FileText size={16}/> {exportando?"Generando…":"Descargar PDF"}
                 </button>
               </div>
             </div>
