@@ -2,10 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { BarChart3, Download, FileText, RefreshCw } from "lucide-react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import { useAuth } from "../context/AuthContext";
-import { obtenerReporte } from "../services/reportes.service";
+import { obtenerReporte, obtenerFincasReportes } from "../services/reportes.service";
+import ReportesTendencia from "../components/ReportesTendencia";
+import { descargarCSVCompleto, imprimirReporteCompleto } from "../utils/reportesExport";
 
 const TIPOS = [
-  { id:"operativo", nombre:"Estado general", descripcion:"Hato, inventario y potreros" },
+  { id:"operativo", nombre:"Estado actual", descripcion:"Hato, inventario y potreros actuales" },
   { id:"leche", nombre:"Producción de leche", descripcion:"Litros y ranking de vacas" },
   { id:"reproduccion", nombre:"Reproducción", descripcion:"Servicios, gestaciones, partos y crías" },
   { id:"salud", nombre:"Salud animal", descripcion:"Eventos, tratamientos y vacunaciones" },
@@ -45,7 +47,12 @@ const csvEscape = (valor) => {
 
 export default function Reportes(){
   const {usuario}=useAuth();
-  const esAdmin=usuario?.rol==="administrador";
+  const esSuperadmin=usuario?.rol==="superadministrador";
+  const esAdmin=["administrador","superadministrador"].includes(usuario?.rol);
+  const [fincas,setFincas]=useState([]);
+  const [fincaId,setFincaId]=useState(usuario?.finca_id ? String(usuario.finca_id) : "");
+  const [fincasListas,setFincasListas]=useState(!esSuperadmin);
+  const [exportando,setExportando]=useState(false);
   const [tipo,setTipo]=useState("operativo");
   const [vista,setVista]=useState("animales");
   const [desde,setDesde]=useState(fechaBogota().slice(0,4)+"-01-01");
@@ -58,8 +65,27 @@ export default function Reportes(){
   const [error,setError]=useState("");
   const visibles=TIPOS.filter(x=>x.id!=="finanzas"||esAdmin);
   const titulo=TIPOS.find(x=>x.id===tipo)?.nombre||"Reportes";
-  const filtros=useMemo(()=>({desde,hasta,page,pageSize,vista}),[desde,hasta,page,pageSize,vista]);
+  const filtros=useMemo(()=>({desde,hasta,page,pageSize,vista,
+    ...(esSuperadmin ? {fincaId} : {})}),[desde,hasta,page,pageSize,vista,esSuperadmin,fincaId]);
   useEffect(()=>{
+    if(!esSuperadmin)return;
+    let activo=true;
+    obtenerFincasReportes().then(lista=>{
+      if(!activo)return;
+      setFincas(lista);
+      setFincaId(prev=>lista.some(f=>String(f.id)===String(prev)) ? prev : String(lista[0]?.id||""));
+    }).catch(()=>{if(activo)setError("No fue posible consultar la lista de fincas.");})
+      .finally(()=>{if(activo)setFincasListas(true);});
+    return ()=>{activo=false;};
+  },[esSuperadmin]);
+  useEffect(()=>{
+    if(esSuperadmin && !fincasListas)return;
+    if(!desde || !hasta || desde>hasta){
+      setDatos(null);setCargando(false);setError("Selecciona un rango de fechas válido.");return;
+    }
+    if(esSuperadmin&&!fincaId){
+      setDatos(null);setCargando(false);setError("No hay fincas disponibles para consultar.");return;
+    }
     let activo=true;
     setCargando(true);
     setError("");
@@ -69,13 +95,31 @@ export default function Reportes(){
       if(activo){setDatos(null);setError(e.response?.data?.message||"No fue posible consultar el reporte.");}
     }).finally(()=>{if(activo)setCargando(false);});
     return ()=>{activo=false;};
-  },[tipo,filtros,actualizacion]);
+  },[tipo,filtros,actualizacion,esSuperadmin,fincasListas,fincaId,desde,hasta]);
   const cambiarTipo=(nuevo)=>{setTipo(nuevo);setPage(1);};
   const max=datos?.paginacion?.totalPages||0;
   const filas=datos?.filas||[];
   const columnas=datos?.columnas||[];
   const grafica=datos?.grafica||[];
   const máximo=Math.max(1,...grafica.map(x=>Number(x.valor)||0));
+  const generarArchivo=async (formato, ventana=null)=>{
+    if(!datos || exportando)return;
+    setExportando(true);
+    setError("");
+    try {
+      if(formato==="csv") await descargarCSVCompleto(tipo,filtros,obtenerReporte,datos);
+      else await imprimirReporteCompleto(tipo,filtros,obtenerReporte,datos,ventana);
+    } catch(err) {
+      if(ventana && !ventana.closed)ventana.close();
+      setError(err.response?.data?.message || err.message || "No se pudo generar el archivo.");
+    } finally {setExportando(false);}
+  };
+  const abrirPDF=()=>{
+    const ventana=window.open("", "_blank");
+    if(!ventana){setError("Permite ventanas emergentes para guardar el informe como PDF.");return;}
+    ventana.document.write("<p>Preparando informe Ganatec...</p>");
+    void generarArchivo("pdf",ventana);
+  };
   const exportarPagina=()=>{
     // Exporta únicamente la página visible, sin fingir que es el histórico completo.
     if(!datos||!filas.length)return;
@@ -110,6 +154,15 @@ export default function Reportes(){
         ))}
       </div>
       <section className="dashboard-panel reportes-filtros" aria-label="Filtros">
+        {esSuperadmin&&(
+          <div className="campo-formulario"><label htmlFor="reporte-finca">Finca</label>
+            <select id="reporte-finca" value={fincaId} disabled={!fincasListas}
+              onChange={e=>{setFincaId(e.target.value);setPage(1);}}>
+              {fincas.length===0&&<option value="">Sin fincas</option>}
+              {fincas.map(f=><option key={f.id} value={f.id}>{f.nombre}</option>)}
+            </select>
+          </div>
+        )}
         <div className="campo-formulario"><label htmlFor="reporte-desde">Desde</label>
           <input id="reporte-desde" type="date" value={desde}
             onChange={e=>{setDesde(e.target.value);setPage(1);}} /></div>
@@ -154,6 +207,7 @@ export default function Reportes(){
               {datos.avisos.map((nota,i)=><p key={i}>{nota}</p>)}
             </section>
           )}
+          {datos.tendencia?.length>0&&<ReportesTendencia tipo={tipo} datos={datos.tendencia}/>}
           {grafica.length>0&&(
             <section className="dashboard-panel">
               <div className="lista-header">
@@ -176,10 +230,20 @@ export default function Reportes(){
             <div className="lista-header reportes-lista-header">
               <div><h3>Detalle del reporte</h3>
                 <span>{datos.paginacion.totalItems} registros · {titulo}</span></div>
-              <button type="button" className="boton-secundario" onClick={exportarPagina} disabled={!filas.length}
-                title="Exporta solamente las filas de esta página">
-                <Download size={16}/> CSV de esta página
-              </button>
+              <div className="reportes-exportaciones">
+                <button type="button" className="boton-secundario" onClick={exportarPagina} disabled={!filas.length}
+                  title="Exporta solamente las filas de esta página">
+                  <Download size={16}/> CSV página
+                </button>
+                <button type="button" className="boton-secundario" onClick={()=>void generarArchivo("csv")}
+                  disabled={exportando || !datos.paginacion.totalItems}>
+                  <Download size={16}/> {exportando?"Generando...":"CSV completo"}
+                </button>
+                <button type="button" className="boton-secundario" onClick={abrirPDF}
+                  disabled={exportando} title="Abre la impresión para guardar como PDF">
+                  <FileText size={16}/> Guardar PDF
+                </button>
+              </div>
             </div>
             {filas.length===0 ? (
               <div className="reportes-vacio"><FileText size={28}/><p>No hay registros para mostrar con estos filtros.</p></div>
@@ -205,6 +269,8 @@ export default function Reportes(){
               </div>
             </div>
             <p className="reportes-meta">
+              {datos.finca?.nombre ? "Finca: "+datos.finca.nombre+" · " : ""}
+              {datos.esEstadoActual ? "Estado actual (los filtros de fecha afectan únicamente el último pesaje). · " : ""}
               Generado: {new Date(datos.generadoEn).toLocaleString("es-CO",{timeZone:"America/Bogota"})}
               {" · "}Zona horaria: {datos.zonaHoraria}
             </p>
