@@ -6564,3 +6564,5 @@ textarea {
 .reportes-tendencia-leyenda i {width:11px;height:11px;display:inline-block;border-radius:50%}
 .reportes-tendencia-ayuda {font-size:12px;color:#607368}
 @media (max-width:760px){.reportes-lista-header{flex-wrap:wrap}.reportes-exportaciones{width:100%}}
+
+.reportes-exportacion-estado{font-size:13px;color:#236b42;margin:8px 0 14px;font-weight:600}
